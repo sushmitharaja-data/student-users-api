@@ -1,0 +1,1 @@
+- [Python dependency installs](python-dependency-installs.md) — use the project-local `.pythonlibs` environment when system `pip` is unavailable.

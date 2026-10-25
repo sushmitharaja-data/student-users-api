@@ -7,6 +7,8 @@ A beginner-friendly Python and FastAPI REST API for managing users in SQLite.
 - `pip install -r requirements.txt` — install the Python dependencies
 - `uvicorn main:app --reload` — run the API locally
 - `pnpm --filter @workspace/api-server run dev` — run the API through the Replit preview
+- `pytest` — run the API tests
+- Required Replit Secrets for protected endpoints: `API_USERNAME` and `API_PASSWORD`
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages
 - Swagger UI: `http://127.0.0.1:8000/docs`
@@ -21,6 +23,7 @@ A beginner-friendly Python and FastAPI REST API for managing users in SQLite.
 ## Where things live
 
 - `main.py` — API routes, request validation, and SQLite setup
+- `tests/test_users.py` — endpoint and validation tests
 - `requirements.txt` — Python dependencies
 - `README.md` — setup guide and API endpoint documentation
 
@@ -32,6 +35,7 @@ A beginner-friendly Python and FastAPI REST API for managing users in SQLite.
 ## Product
 
 - Create, list, update, and delete users with validated names and email addresses.
+- Protect user endpoints with HTTP Basic Auth configured through `API_USERNAME` and `API_PASSWORD`.
 
 ## User preferences
 

@@ -1,5 +1,7 @@
 """A beginner-friendly REST API for managing users."""
 
+import os
+import secrets
 import sqlite3
 from pathlib import Path
 from typing import Generator
@@ -7,6 +9,7 @@ from typing import Generator
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Response, status
 from fastapi.openapi.docs import get_swagger_ui_html
 from pydantic import BaseModel, EmailStr, Field, field_validator
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 
 
 DATABASE_PATH = Path(__file__).resolve().with_name("users.db")
@@ -82,7 +85,42 @@ app = FastAPI(
     docs_url="/docs",
     openapi_url="/openapi.json",
 )
-users_router = APIRouter()
+basic_auth = HTTPBasic()
+
+
+def require_basic_auth(
+    credentials: HTTPBasicCredentials = Depends(basic_auth),
+) -> str:
+    """Require credentials configured through environment variables."""
+    expected_username = os.getenv("API_USERNAME")
+    expected_password = os.getenv("API_PASSWORD")
+
+    if not expected_username or not expected_password:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Basic authentication is not configured on this server.",
+        )
+
+    username_matches = secrets.compare_digest(
+        credentials.username.encode("utf-8"),
+        expected_username.encode("utf-8"),
+    )
+    password_matches = secrets.compare_digest(
+        credentials.password.encode("utf-8"),
+        expected_password.encode("utf-8"),
+    )
+
+    if not (username_matches and password_matches):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password.",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+    return credentials.username
+
+
+users_router = APIRouter(dependencies=[Depends(require_basic_auth)])
 
 
 @users_router.post(
