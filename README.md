@@ -2,6 +2,14 @@
 
 A beginner-friendly REST API built with Python and FastAPI. It stores users in a local SQLite database and supports creating, listing, updating, and deleting users. There is no frontend.
 
+## Technologies used
+
+- Python
+- FastAPI and Uvicorn
+- SQLite (`sqlite3`)
+- Pydantic and `email-validator` for request validation
+- pytest and HTTPX for API tests
+
 ## Requirements
 
 - Python 3.10 or newer
@@ -24,7 +32,9 @@ Configure `API_USERNAME` and `API_PASSWORD` before starting the API. In Replit, 
 Open Swagger UI at `http://127.0.0.1:8000/docs`. FastAPI also provides the OpenAPI schema at `http://127.0.0.1:8000/openapi.json`.
 Use Swagger UI's **Authorize** button to enter the same HTTP Basic Auth username and password required by the user endpoints.
 
-## User fields
+## Validation and user fields
+
+FastAPI uses Pydantic schemas to validate create and update request bodies. Invalid input returns `422 Unprocessable Entity`.
 
 | Field | Type | Rules |
 | --- | --- | --- |
